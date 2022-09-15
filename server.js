@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+const dbController = require('./controller/test');
+
 require('dotenv').config();
 const port = process.env.SERVER_PORT || 3002;
 
@@ -19,6 +21,9 @@ app.use(express.json());
 app.use('/api/1.0/test', (req, res, next) => {
   res.send('Hello From BE');
 });
+
+// db test -> 確定可以連上
+// app.use('/api/1.0/db-test', dbController.getMemberList);
 
 // 404
 app.use((req, res, next) => {
