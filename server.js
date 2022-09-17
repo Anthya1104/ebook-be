@@ -25,6 +25,10 @@ app.use('/api/1.0/test', (req, res, next) => {
 // db test -> 確定可以連上
 // app.use('/api/1.0/db-test', dbController.getMemberList);
 
+// bookshelfRouter
+let bookshelfRouter = require('./routers/bookshelf');
+app.use('/api/1.0/bookshelf', bookshelfRouter);
+
 // 404
 app.use((req, res, next) => {
   res.status(404).send('404 Not Found');
