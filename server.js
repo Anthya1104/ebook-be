@@ -10,11 +10,12 @@ const path = require('path');
 
 const cors = require('cors');
 const corsOptions = {
-  Credential: true,
+  credential: true,
   origin: ['http://localhost:3005'],
 };
 
 app.use(cors(corsOptions));
+// app.use(cors());
 
 app.use(express.json());
 
