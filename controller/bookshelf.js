@@ -11,13 +11,13 @@ const getRecentBook = async (req, res, next) => {
   // console.log('recent-book request received');
 
   let data = await bookshelfModel.getRecentBook();
-  console.log(data);
+  // console.log(data);
   res.json(data);
 };
 
 // 更新目前在的分類篩出來的bookList
 const getOnCategory = async (req, res, next) => {
-  console.log('category-info', req.body[0]);
+  // console.log('category-info', req.body[0]);
 
   // let data = await bookshelfModel.getFilteredBooks();
   let [data] = await pool.execute(
@@ -25,7 +25,7 @@ const getOnCategory = async (req, res, next) => {
     [req.body[0]]
   );
   // let onCategoryId = 'abc';
-  console.log(data.length);
+  // console.log(data.length);
 
   res.json(data);
 
@@ -33,7 +33,7 @@ const getOnCategory = async (req, res, next) => {
 };
 
 const getOwnedBooks = async (req, res, next) => {
-  console.log('getOwnedBooks', req.onCategoryId);
+  // console.log('getOwnedBooks', req.onCategoryId);
   let data = await bookshelfModel.getOwnedBooks();
   // console.log(onCategoryId);
   res.json(data);

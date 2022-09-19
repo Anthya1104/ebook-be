@@ -30,6 +30,10 @@ app.use('/api/1.0/test', (req, res, next) => {
 let bookshelfRouter = require('./routers/bookshelf');
 app.use('/api/1.0/bookshelf', bookshelfRouter);
 
+// reviewsRouter
+let reviewsRouter = require('./routers/reviews');
+app.use('/api/1.0/reviews', reviewsRouter);
+
 // 404
 app.use((req, res, next) => {
   res.status(404).send('404 Not Found');
