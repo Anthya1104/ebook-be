@@ -1,11 +1,21 @@
 const bookshelfModel = require('../models/bookshelf');
 const pool = require('../utils/db');
 
+// 傳送全部分類資料給前端
 async function getCustomCategories(req, res, next) {
   let data = await bookshelfModel.getCustomCategories();
   res.json(data);
 }
+// 傳送最近閱讀資料給前端
+const getRecentBook = async (req, res, next) => {
+  // console.log('recent-book request received');
 
+  let data = await bookshelfModel.getRecentBook();
+  console.log(data);
+  res.json(data);
+};
+
+// 更新目前在的分類篩出來的bookList
 const getOnCategory = async (req, res, next) => {
   console.log('category-info', req.body[0]);
 
@@ -29,4 +39,4 @@ const getOwnedBooks = async (req, res, next) => {
   res.json(data);
 };
 
-module.exports = { getCustomCategories, getOwnedBooks, getOnCategory };
+module.exports = { getCustomCategories, getOwnedBooks, getOnCategory, getRecentBook };
