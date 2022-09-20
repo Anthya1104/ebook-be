@@ -17,7 +17,7 @@ const getRecentBook = async (req, res, next) => {
 
 // 更新目前在的分類篩出來的bookList
 const getOnCategory = async (req, res, next) => {
-  console.log('category-info', req.body[0]);
+  // console.log('category-info', req.body[0]);
 
   // 假設分類 1 -> all : 抓全部
   if (req.body[0] === 1) {
