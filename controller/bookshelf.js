@@ -17,7 +17,15 @@ const getRecentBook = async (req, res, next) => {
 
 // 更新目前在的分類篩出來的bookList
 const getOnCategory = async (req, res, next) => {
-  // console.log('category-info', req.body[0]);
+  console.log('category-info', req.body[0]);
+
+  // 假設分類 1 -> all : 抓全部
+  if (req.body[0] === 1) {
+    let [data] = await pool.execute(
+      'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id'
+    );
+    return res.json(data);
+  }
 
   // let data = await bookshelfModel.getFilteredBooks();
   let [data] = await pool.execute(
