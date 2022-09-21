@@ -1,4 +1,5 @@
 const pool = require('../utils/db');
+const reviewModel = require('../models/reviews');
 // validator
 const { validationResult } = require('express-validator');
 
@@ -71,4 +72,9 @@ const postReviews = async (req, res, next) => {
   res.json('成功寫入評論');
 };
 
-module.exports = { postReviews, reViewValueChecker };
+const getReviews = async (req, res, next) => {
+  let data = await reviewModel.getReview();
+  res.json(data);
+};
+
+module.exports = { postReviews, reViewValueChecker, getReviews };

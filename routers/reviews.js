@@ -21,4 +21,7 @@ const reviewsController = require('../controller/reviews');
 // 前端 post review
 router.post('/post-review', reviewRules, reviewsController.reViewValueChecker, reviewsController.postReviews);
 
+// 前端 get review
+router.get('/get-reviews', reviewsController.getReviews);
+
 module.exports = router;
