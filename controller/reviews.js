@@ -73,8 +73,33 @@ const postReviews = async (req, res, next) => {
 };
 
 const getReviews = async (req, res, next) => {
-  let data = await reviewModel.getReview();
-  res.json(data);
+  // TODO:處理分頁 得到 totalPage, perPage, page, lastPage, offSet
+  // 假定只抓一號會員資料
+  let userId = 1;
+  const perPage = 4;
+
+  let page = req.query.page || 1;
+
+  // get total page
+  let total = await reviewModel.countTotalReview(userId);
+
+  let lastPage = Math.ceil(total / perPage);
+
+  const offset = perPage * (page - 1);
+
+  let data = await reviewModel.getReview(userId, perPage, offset);
+
+  let newJson = {
+    pagination: {
+      total,
+      perPage,
+      page,
+      lastPage,
+    },
+    data,
+  };
+
+  res.json(newJson);
 };
 
 module.exports = { postReviews, reViewValueChecker, getReviews };
