@@ -47,4 +47,16 @@ const getOwnedBooks = async (req, res, next) => {
   res.json(data);
 };
 
-module.exports = { getCustomCategories, getOwnedBooks, getOnCategory, getRecentBook };
+// 更新最後閱讀
+const updateRecentBook = async (req, res, next) => {
+  // 寫入資料庫的話不用轉換
+  // let currentTime = new Date().toISOString().split('T').shift();
+  let currentTime = new Date();
+  let memberId = 1;
+  let bookId = req.query.id;
+  let result = await bookshelfModel.updateRecentBook(memberId, bookId, currentTime);
+  console.log('postbookShelf', result);
+  res.json(`有收到資料喔 :${req.query.id}`);
+};
+
+module.exports = { getCustomCategories, getOwnedBooks, getOnCategory, getRecentBook, updateRecentBook };

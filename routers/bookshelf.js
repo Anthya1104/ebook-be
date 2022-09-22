@@ -22,4 +22,7 @@ router.post('/on-filter', bookshelfController.getOnCategory);
 // 抓出更新後的頁面資料
 router.get('/owned-books', bookshelfController.getOwnedBooks);
 
+// 更新最後閱讀
+router.post('/update-recent-book', bookshelfController.updateRecentBook);
+
 module.exports = router;
