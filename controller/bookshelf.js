@@ -55,8 +55,8 @@ const updateRecentBook = async (req, res, next) => {
   let memberId = 1;
   let bookId = req.query.id;
   let result = await bookshelfModel.updateRecentBook(memberId, bookId, currentTime);
-  console.log('postbookShelf', result);
-  res.json(`有收到資料喔 :${req.query.id}`);
+  // console.log('postbookShelf', result);
+  res.json(`更新成功`);
 };
 
 module.exports = { getCustomCategories, getOwnedBooks, getOnCategory, getRecentBook, updateRecentBook };
