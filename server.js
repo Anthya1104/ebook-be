@@ -17,6 +17,20 @@ const corsOptions = {
 app.use(cors(corsOptions));
 // app.use(cors());
 
+// 啟用session
+const expressSession = require('express-session');
+
+var FileStore = require('session-file-store')(expressSession);
+
+app.use(
+  expressSession({
+    store: new FileStore({ path: path.join(__dirname, '..', 'session') }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 app.use(express.json());
 
 app.use('/api/1.0/test', (req, res, next) => {
