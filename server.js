@@ -10,7 +10,7 @@ const path = require('path');
 
 const cors = require('cors');
 const corsOptions = {
-  credential: true,
+  credentials: true,
   origin: ['http://localhost:3005'],
 };
 
@@ -33,6 +33,14 @@ app.use('/api/1.0/bookshelf', bookshelfRouter);
 // reviewsRouter
 let reviewsRouter = require('./routers/reviews');
 app.use('/api/1.0/reviews', reviewsRouter);
+
+// authRouter
+let authRouter = require('./routers/auth');
+app.use('/api/1.0/auth', authRouter);
+
+// memberRouter
+let memberRouter = require('./routers/member');
+app.use('/api/1.0/member', memberRouter);
 
 // 404
 app.use((req, res, next) => {
