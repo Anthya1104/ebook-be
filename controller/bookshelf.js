@@ -20,21 +20,39 @@ const getRecentBook = async (req, res, next) => {
 // 更新目前在的分類篩出來的bookList
 const getOnCategory = async (req, res, next) => {
   console.log('category-info', req.body.bookFilterParams.category);
+  let sql =
+    'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id WHERE owned_books.member_id = ?';
 
   // 假設分類 1 -> all : 抓全部
   if (req.body.bookFilterParams.category === 1) {
-    let [data] = await pool.execute(
-      'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id WHERE owned_books.member_id = ?',
-      [req.session.member.id]
-    );
+    let [data] = await pool.execute(sql, [req.session.member.id]);
+
+    // TODO:最後分頁分頁
     return res.json(data);
   }
+  // TODO:繼續接 WHERE
+  // 如果已讀
+  let paramCondition = [req.session.member.id];
+  sql = sql + ' AND owned_books.category_id = ?';
+  paramCondition.push(req.body.bookFilterParams.category);
+  if (req.body.bookFilterParams.is_read) {
+    sql = sql + ' AND owned_books.reading_progress <> ?';
+    paramCondition.push(0);
+  } else {
+    sql = sql + ' AND owned_books.reading_progress = ?';
+    paramCondition.push(0);
+  }
+  if (!req.body.bookFilterParams.date_sort_toggled) {
+    sql = sql + ' ORDER BY owned_books.update_time DESC';
+  }
+  console.log(sql);
+  console.log(paramCondition);
 
-  // let data = await bookshelfModel.getFilteredBooks();
-  let [data] = await pool.execute(
-    'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id WHERE owned_books.category_id = ? AND owned_books.member_id = ?',
-    [req.body.bookFilterParams.category, req.session.member.id]
-  );
+  // let [data] = await pool.execute(
+  //   'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id WHERE owned_books.category_id = ? AND owned_books.member_id = ?',
+  //   [req.body.bookFilterParams.category, req.session.member.id]
+  // );
+  let [data] = await pool.execute(sql, paramCondition);
   // // let onCategoryId = 'abc';
   // // console.log(data.length);
 
