@@ -37,9 +37,9 @@ router.post('/register', regiRules, async (req, res, next) => {
   } catch (e) {
     console.error(e);
   }
+
   // 跳到這邊代表帳號沒有重複
   // hashed password
-
   try {
     let hashedPassword = await bcrypt.hash(req.body.password, 10);
     let result = await pool.execute('INSERT INTO member (account, password, name) VALUES (?,?,?)', [req.body.account, hashedPassword, req.body.name]);
@@ -53,7 +53,35 @@ router.post('/register', regiRules, async (req, res, next) => {
 // 登入 -> /api/1.0/auth/login
 router.post('/login', async (req, res, next) => {
   console.log(req.body);
-  res.json('登入有接到喔');
+  // 是否註冊過 -> 資料庫是否有資料
+  try {
+    let [members] = await pool.execute('SELECT * FROM member WHERE account = ?', [req.body.account]);
+    console.log(members);
+    if (members.length === 0) {
+      // 如果不存在
+      return res.status(401).json({ message: '帳號或密碼錯誤' });
+    }
+
+    // 如果存在 -> 有註冊過
+    let member = members[0];
+    let comparePassword = await bcrypt.compare(req.body.password, member.password);
+    if (!comparePassword) {
+      // 如果比對不正確
+      return res.status(401).json({ message: '帳號或密碼錯誤' });
+    }
+    // 比對正確 -> 存進 session
+    let saveMember = {
+      id: member.id,
+      name: member.name,
+      password: member.password,
+      loginDt: new Date().toISOString(),
+    };
+    req.session.member = saveMember;
+
+    res.json(saveMember);
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 module.exports = router;
