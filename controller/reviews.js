@@ -75,7 +75,8 @@ const postReviews = async (req, res, next) => {
 const getReviews = async (req, res, next) => {
   // TODO:處理分頁 得到 totalPage, perPage, page, lastPage, offSet
   // 假定只抓一號會員資料
-  let userId = 1;
+  console.log('getReviews', req.session.member.id);
+  let userId = req.session.member.id;
   const perPage = 3;
 
   let page = req.query.page || 1;

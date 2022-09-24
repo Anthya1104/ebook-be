@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const authMiddleware = require('../middlewares/auth');
+
 // validator
 const { body } = require('express-validator');
 const reviewRules = [
@@ -22,6 +24,6 @@ const reviewsController = require('../controller/reviews');
 router.post('/post-review', reviewRules, reviewsController.reViewValueChecker, reviewsController.postReviews);
 
 // 前端 get review
-router.get('/get-reviews', reviewsController.getReviews);
+router.get('/get-reviews', authMiddleware.checkLogin, reviewsController.getReviews);
 
 module.exports = router;
