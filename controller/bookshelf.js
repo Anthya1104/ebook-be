@@ -10,8 +10,9 @@ async function getCustomCategories(req, res, next) {
 const getRecentBook = async (req, res, next) => {
   // console.log('recent-book request received');
 
-  let data = await bookshelfModel.getRecentBook();
+  let data = await bookshelfModel.getRecentBook(req.session.member.id);
   // console.log(data);
+  console.log('bookshelf', req.session.member.id);
   res.json(data);
 };
 
