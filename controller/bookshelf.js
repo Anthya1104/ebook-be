@@ -38,12 +38,22 @@ const getOnCategory = async (req, res, next) => {
     } else {
       sql = sql + ' ORDER BY owned_books.update_time';
     }
+    // TODO:最後分頁
+    const perPage = 4;
+    let page = req.body.bookFilterParams.on_page || 1;
+    let [total] = await pool.execute('SELECT COUNT(*) AS total FROM owned_books WHERE member_id = ?', [req.session.member.id]);
+    // console.log(total[0].total);
+    let totalItem = total[0].total;
+    let lastPage = Math.ceil(totalItem / perPage);
+    const offset = perPage * (page - 1);
+    console.log(totalItem, lastPage, offset);
+    sql = sql + ' LIMIT ? OFFSET ?';
+    paramCondition.push(perPage, offset);
     let [data] = await pool.execute(sql, paramCondition);
 
-    // TODO:最後分頁分頁
     return res.json(data);
   }
-  // TODO:繼續接 WHERE
+  // 繼續接 WHERE
   // 如果已讀
   let paramCondition = [req.session.member.id];
   sql = sql + ' AND owned_books.category_id = ?';
