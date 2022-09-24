@@ -25,7 +25,20 @@ const getOnCategory = async (req, res, next) => {
 
   // 假設分類 1 -> all : 抓全部
   if (req.body.bookFilterParams.category === 1) {
-    let [data] = await pool.execute(sql, [req.session.member.id]);
+    let paramCondition = [req.session.member.id];
+    if (req.body.bookFilterParams.is_read) {
+      sql = sql + ' AND owned_books.reading_progress <> ?';
+      paramCondition.push(0);
+    } else {
+      sql = sql + ' AND owned_books.reading_progress = ?';
+      paramCondition.push(0);
+    }
+    if (!req.body.bookFilterParams.date_sort_toggled) {
+      sql = sql + ' ORDER BY owned_books.update_time DESC';
+    } else {
+      sql = sql + ' ORDER BY owned_books.update_time';
+    }
+    let [data] = await pool.execute(sql, paramCondition);
 
     // TODO:最後分頁分頁
     return res.json(data);
@@ -44,6 +57,8 @@ const getOnCategory = async (req, res, next) => {
   }
   if (!req.body.bookFilterParams.date_sort_toggled) {
     sql = sql + ' ORDER BY owned_books.update_time DESC';
+  } else {
+    sql = sql + ' ORDER BY owned_books.update_time';
   }
   console.log(sql);
   console.log(paramCondition);
