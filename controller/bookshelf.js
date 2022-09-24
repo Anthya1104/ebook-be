@@ -3,7 +3,8 @@ const pool = require('../utils/db');
 
 // 傳送全部分類資料給前端
 async function getCustomCategories(req, res, next) {
-  let data = await bookshelfModel.getCustomCategories();
+  // console.log('bookshelf', req.session.member.id);
+  let data = await bookshelfModel.getCustomCategories(req.session.member.id);
   res.json(data);
 }
 // 傳送最近閱讀資料給前端
@@ -12,18 +13,19 @@ const getRecentBook = async (req, res, next) => {
 
   let data = await bookshelfModel.getRecentBook(req.session.member.id);
   // console.log(data);
-  console.log('bookshelf', req.session.member.id);
+
   res.json(data);
 };
 
 // 更新目前在的分類篩出來的bookList
 const getOnCategory = async (req, res, next) => {
-  // console.log('category-info', req.body[0]);
+  // console.log('category-info', req.session.member.id);
 
   // 假設分類 1 -> all : 抓全部
   if (req.body[0] === 1) {
     let [data] = await pool.execute(
-      'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id'
+      'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id WHERE owned_books.member_id = ?',
+      [req.session.member.id]
     );
     return res.json(data);
   }
@@ -53,7 +55,8 @@ const updateRecentBook = async (req, res, next) => {
   // 寫入資料庫的話不用轉換
   // let currentTime = new Date().toISOString().split('T').shift();
   let currentTime = new Date();
-  let memberId = 1;
+  console.log('update', req.session);
+  let memberId = req.session.member.id;
   let bookId = req.query.id;
   let result = await bookshelfModel.updateRecentBook(memberId, bookId, currentTime);
   // console.log('postbookShelf', result);

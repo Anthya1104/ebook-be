@@ -1,7 +1,7 @@
 const pool = require('../utils/db');
 
-async function getCustomCategories() {
-  let [data] = await pool.execute('SELECT * FROM customized_book_category WHERE user_id = 1');
+async function getCustomCategories(userId) {
+  let [data] = await pool.execute('SELECT * FROM customized_book_category WHERE user_id = ?', [userId]);
   return data;
 }
 

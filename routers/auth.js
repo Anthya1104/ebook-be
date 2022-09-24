@@ -19,11 +19,11 @@ const regiRules = [
 
 // 註冊 -> /api/1.0/auth/register
 router.post('/register', regiRules, async (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.body);
 
   // validation
   const validateResult = validationResult(req);
-  console.log('validateRewult', validateResult);
+  // console.log('validateRewult', validateResult);
   if (!validateResult.isEmpty()) {
     return res.status(400).json({ errors: validateResult.array() });
   }
@@ -43,7 +43,7 @@ router.post('/register', regiRules, async (req, res, next) => {
   try {
     let hashedPassword = await bcrypt.hash(req.body.password, 10);
     let result = await pool.execute('INSERT INTO member (account, password, name) VALUES (?,?,?)', [req.body.account, hashedPassword, req.body.name]);
-    console.log('insert new member', result);
+    // console.log('insert new member', result);
     res.json({ message: '註冊成功' });
   } catch (e) {
     console.error(e);
@@ -52,11 +52,11 @@ router.post('/register', regiRules, async (req, res, next) => {
 
 // 登入 -> /api/1.0/auth/login
 router.post('/login', async (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.body);
   // 是否註冊過 -> 資料庫是否有資料
   try {
     let [members] = await pool.execute('SELECT * FROM member WHERE account = ?', [req.body.account]);
-    console.log(members);
+    // console.log(members);
     if (members.length === 0) {
       // 如果不存在
       return res.status(401).json({ message: '帳號或密碼錯誤' });

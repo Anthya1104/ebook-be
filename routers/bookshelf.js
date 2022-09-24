@@ -7,14 +7,14 @@ const authMiddleware = require('../middlewares/auth');
 const bookshelfController = require('../controller/bookshelf');
 
 // 送分類資料給前端
-router.get('/custom-categories', bookshelfController.getCustomCategories);
+router.get('/custom-categories', authMiddleware.checkLogin, bookshelfController.getCustomCategories);
 
 // 送最近閱讀資料給前端
 router.get('/recent-book', authMiddleware.checkLogin, bookshelfController.getRecentBook);
 
 // 抓取前端送來的變數
 // category filter
-router.post('/on-filter', bookshelfController.getOnCategory);
+router.post('/on-filter', authMiddleware.checkLogin, bookshelfController.getOnCategory);
 // TODO: isRead filter
 
 // TODO: searched filter
@@ -25,6 +25,6 @@ router.post('/on-filter', bookshelfController.getOnCategory);
 router.get('/owned-books', bookshelfController.getOwnedBooks);
 
 // 更新最後閱讀
-router.post('/update-recent-book', bookshelfController.updateRecentBook);
+router.post('/update-recent-book', authMiddleware.checkLogin, bookshelfController.updateRecentBook);
 
 module.exports = router;
