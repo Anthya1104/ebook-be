@@ -56,8 +56,13 @@ app.use('/api/1.0/auth', authRouter);
 let memberRouter = require('./routers/member');
 app.use('/api/1.0/member', memberRouter);
 
+// orderRouter
 let orderRouter = require('./routers/order');
 app.use('/api/1.0/order', orderRouter);
+
+// marketRouter
+let marketRouter = require('./routers/market')
+app.use('/api/1.0/market', marketRouter)
 
 // 404
 app.use((req, res, next) => {
