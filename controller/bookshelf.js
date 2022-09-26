@@ -38,7 +38,7 @@ const getOnCategory = async (req, res, next) => {
     } else {
       sql = sql + ' ORDER BY owned_books.update_time';
     }
-    // TODO:最後分頁
+    // 最後分頁
     const perPage = 4;
     let page = req.body.bookFilterParams.on_page || 1;
     let [total] = await pool.execute('SELECT COUNT(*) AS total FROM owned_books WHERE member_id = ?', [req.session.member.id]);
@@ -51,7 +51,10 @@ const getOnCategory = async (req, res, next) => {
     paramCondition.push(perPage, offset);
     let [data] = await pool.execute(sql, paramCondition);
 
-    return res.json(data);
+    let newData = { pagination: { totalItem, perPage, page, lastPage }, data };
+    // console.log('dataCompare', newData);
+    // console.log('dataCompare2', data);
+    return res.json(newData);
   }
   // 繼續接 WHERE
   // 如果已讀
@@ -70,6 +73,18 @@ const getOnCategory = async (req, res, next) => {
   } else {
     sql = sql + ' ORDER BY owned_books.update_time';
   }
+
+  const perPage = 4;
+  let page = req.body.bookFilterParams.on_page || 1;
+  let [total] = await pool.execute('SELECT COUNT(*) AS total FROM owned_books WHERE member_id = ?', [req.session.member.id]);
+  // console.log(total[0].total);
+  let totalItem = total[0].total;
+  let lastPage = Math.ceil(totalItem / perPage);
+  const offset = perPage * (page - 1);
+  console.log(totalItem, lastPage, offset);
+  sql = sql + ' LIMIT ? OFFSET ?';
+  paramCondition.push(perPage, offset);
+
   console.log(sql);
   console.log(paramCondition);
 
@@ -81,7 +96,8 @@ const getOnCategory = async (req, res, next) => {
   // // let onCategoryId = 'abc';
   // // console.log(data.length);
 
-  res.json(data);
+  let newData = { pagination: { totalItem, perPage, page, lastPage }, data };
+  res.json(newData);
 
   // next();
 };
