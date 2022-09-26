@@ -103,10 +103,9 @@ const getOnCategory = async (req, res, next) => {
   //   [req.body.bookFilterParams.category, req.session.member.id]
   // );
   let [data] = await pool.execute(sql, paramCondition);
-  // // let onCategoryId = 'abc';
-  // // console.log(data.length);
 
   let newData = { pagination: { totalItem, perPage, page, lastPage }, data };
+
   res.json(newData);
 
   // next();

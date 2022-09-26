@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../utils/db');
+const authController = require('../controller/auth');
 
 const bcrypt = require('bcrypt');
 
@@ -83,5 +84,8 @@ router.post('/login', async (req, res, next) => {
     console.error(e);
   }
 });
+
+// 登出 -> /api/1.0/auth/logout
+router.get('/logout', authController.LogoutHandler);
 
 module.exports = router;
