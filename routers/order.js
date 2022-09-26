@@ -6,7 +6,7 @@ const pool = require('../utils/db');
 router.get('/get-order', async (req, res, next) => {
   // console.log(req.query.member_id);
   let [data] = await pool.execute('SELECT * FROM user_order WHERE user_id = ?', [req.query.member_id]);
-  console.log('data in order', data);
+  // console.log('data in order', data);
   res.json(data);
 });
 
