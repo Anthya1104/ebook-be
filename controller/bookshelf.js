@@ -18,37 +18,43 @@ const getRecentBook = async (req, res, next) => {
 };
 
 // 更新目前在的分類篩出來的bookList
+
 const getOnCategory = async (req, res, next) => {
   console.log('category-info', req.body.bookFilterParams.category);
   let sql =
     'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id WHERE owned_books.member_id = ?';
-
+  let sqlCon = '';
   // 假設分類 1 -> all : 抓全部
   if (req.body.bookFilterParams.category === 1) {
     let paramCondition = [req.session.member.id];
     if (req.body.bookFilterParams.is_read) {
-      sql = sql + ' AND owned_books.reading_progress <> ?';
+      sqlCon = sqlCon + ' AND owned_books.reading_progress <> ?';
       paramCondition.push(0);
     } else {
-      sql = sql + ' AND owned_books.reading_progress = ?';
+      sqlCon = sqlCon + ' AND owned_books.reading_progress = ?';
       paramCondition.push(0);
     }
     if (!req.body.bookFilterParams.date_sort_toggled) {
-      sql = sql + ' ORDER BY owned_books.update_time DESC';
+      sqlCon = sqlCon + ' ORDER BY owned_books.update_time DESC';
     } else {
-      sql = sql + ' ORDER BY owned_books.update_time';
+      sqlCon = sqlCon + ' ORDER BY owned_books.update_time';
     }
     // 最後分頁
     const perPage = 4;
     let page = req.body.bookFilterParams.on_page || 1;
-    let [total] = await pool.execute('SELECT COUNT(*) AS total FROM owned_books WHERE member_id = ?', [req.session.member.id]);
+    let totalSql = 'SELECT COUNT(*) AS total FROM owned_books WHERE member_id = ?';
+    totalSql = totalSql + sqlCon;
+    let [total] = await pool.execute(totalSql, paramCondition);
     // console.log(total[0].total);
     let totalItem = total[0].total;
     let lastPage = Math.ceil(totalItem / perPage);
     const offset = perPage * (page - 1);
     console.log(totalItem, lastPage, offset);
-    sql = sql + ' LIMIT ? OFFSET ?';
+    sqlCon = sqlCon + ' LIMIT ? OFFSET ?';
     paramCondition.push(perPage, offset);
+    sql = sql + sqlCon;
+    console.log('sql', sql);
+    console.log('paramCon', paramCondition);
     let [data] = await pool.execute(sql, paramCondition);
 
     let newData = { pagination: { totalItem, perPage, page, lastPage }, data };
@@ -59,34 +65,38 @@ const getOnCategory = async (req, res, next) => {
   // 繼續接 WHERE
   // 如果已讀
   let paramCondition = [req.session.member.id];
-  sql = sql + ' AND owned_books.category_id = ?';
+  sqlCon = sqlCon + ' AND owned_books.category_id = ?';
   paramCondition.push(req.body.bookFilterParams.category);
   if (req.body.bookFilterParams.is_read) {
-    sql = sql + ' AND owned_books.reading_progress <> ?';
+    sqlCon = sqlCon + ' AND owned_books.reading_progress <> ?';
     paramCondition.push(0);
   } else {
-    sql = sql + ' AND owned_books.reading_progress = ?';
+    sqlCon = sqlCon + ' AND owned_books.reading_progress = ?';
     paramCondition.push(0);
   }
   if (!req.body.bookFilterParams.date_sort_toggled) {
-    sql = sql + ' ORDER BY owned_books.update_time DESC';
+    sqlCon = sqlCon + ' ORDER BY owned_books.update_time DESC';
   } else {
-    sql = sql + ' ORDER BY owned_books.update_time';
+    sqlCon = sqlCon + ' ORDER BY owned_books.update_time';
   }
 
   const perPage = 4;
   let page = req.body.bookFilterParams.on_page || 1;
-  let [total] = await pool.execute('SELECT COUNT(*) AS total FROM owned_books WHERE member_id = ?', [req.session.member.id]);
+  let totalSql = 'SELECT COUNT(*) AS total FROM owned_books WHERE member_id = ?';
+  totalSql = totalSql + sqlCon;
+  let [total] = await pool.execute(totalSql, paramCondition);
   // console.log(total[0].total);
   let totalItem = total[0].total;
   let lastPage = Math.ceil(totalItem / perPage);
   const offset = perPage * (page - 1);
   console.log(totalItem, lastPage, offset);
-  sql = sql + ' LIMIT ? OFFSET ?';
+  sqlCon = sqlCon + ' LIMIT ? OFFSET ?';
   paramCondition.push(perPage, offset);
 
   console.log(sql);
   console.log(paramCondition);
+
+  sql = sql + sqlCon;
 
   // let [data] = await pool.execute(
   //   'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id WHERE owned_books.category_id = ? AND owned_books.member_id = ?',
