@@ -32,6 +32,7 @@ router.post('/register', regiRules, async (req, res, next) => {
   // 檢查帳號是否重複
   try {
     let [members] = await pool.execute('SELECT * FROM member WHERE account = ?', [req.body.account]);
+    // console.log('member checking', members);
     if (members.length > 0) {
       return res.status(400).json({ message: '這個帳號已經存在了喔' });
     }

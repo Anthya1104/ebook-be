@@ -56,6 +56,9 @@ app.use('/api/1.0/auth', authRouter);
 let memberRouter = require('./routers/member');
 app.use('/api/1.0/member', memberRouter);
 
+let orderRouter = require('./routers/order');
+app.use('/api/1.0/order', orderRouter);
+
 // 404
 app.use((req, res, next) => {
   res.status(404).send('404 Not Found');
