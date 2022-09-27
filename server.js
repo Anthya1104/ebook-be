@@ -61,8 +61,12 @@ let orderRouter = require('./routers/order');
 app.use('/api/1.0/order', orderRouter);
 
 // marketRouter
-let marketRouter = require('./routers/market')
-app.use('/api/1.0/market', marketRouter)
+let marketRouter = require('./routers/market');
+app.use('/api/1.0/market', marketRouter);
+
+// couponRouter
+let couponRouter = require('./routers/coupon');
+app.use('/api/1.0/coupon', couponRouter);
 
 // 404
 app.use((req, res, next) => {
