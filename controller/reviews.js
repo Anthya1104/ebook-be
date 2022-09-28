@@ -12,7 +12,7 @@ const reViewValueChecker = async (req, res, next) => {
     return res.status(400).json({ errors: validateResult.array() });
   }
 
-  // console.log('SQLparam', req.body.member_id);
+  // console.log('SQLparam', req.body.member_id, req.body.book_id);
 
   // 檢查 book_id, member_id 是否存在
   let reqData;
@@ -22,7 +22,7 @@ const reViewValueChecker = async (req, res, next) => {
   } catch (e) {
     console.error(e);
   }
-  // console.log(reqData);
+  console.log(reqData);
   // 如果 === 0 -> 不存在 沒抓到
   if (reqData.length === 0) {
     return res.status(400).json({ message: '會員或書本不存在' });
