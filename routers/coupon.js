@@ -4,7 +4,7 @@ const pool = require('../utils/db');
 
 router.get('/get-coupon', async (req, res, next) => {
   // let getProducts = await pool.execute('SELECT * from product');
-  console.log('coupon')
+  console.log('coupon');
   res.json('connected');
 });
 module.exports = router;
