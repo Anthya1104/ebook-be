@@ -24,8 +24,8 @@ const getOnCategory = async (req, res, next) => {
   let sql =
     'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id WHERE owned_books.member_id = ?';
   let sqlCon = '';
-  // 假設分類 0 -> all : 抓全部
-  if (req.body.bookFilterParams.category === 0) {
+  // 假設分類 1 -> all : 抓全部
+  if (req.body.bookFilterParams.category === 1) {
     let paramCondition = [req.session.member.id];
     if (req.body.bookFilterParams.is_read) {
       sqlCon = sqlCon + ' AND owned_books.reading_progress <> ?';
