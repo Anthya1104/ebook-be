@@ -49,7 +49,7 @@ router.post('/register', regiRules, async (req, res, next) => {
 
     // create default customized_book_category
     let [memberIdRes] = await pool.execute('SELECT * from member WHERE account = ?', [req.body.account]);
-    console.log(memberIdRes[0].id);
+    // console.log(memberIdRes[0].id);
     let currentTime = new Date();
     let [newMemberCatRes] = await pool.execute('INSERT INTO customized_book_category (local_id, user_id, category_name, create_time) VALUES (?, ?, ?, ?)', [
       1,
