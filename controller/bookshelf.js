@@ -56,6 +56,7 @@ const getOnCategory = async (req, res, next) => {
     console.log('sql', sql);
     console.log('paramCon', paramCondition);
     let [data] = await pool.execute(sql, paramCondition);
+    console.log(data)
 
     let newData = { pagination: { totalItem, perPage, page, lastPage }, data };
     // console.log('dataCompare', newData);

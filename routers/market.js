@@ -3,6 +3,8 @@ const { format } = require('mysql2');
 const router = express.Router();
 const pool = require('../utils/db');
 
+const authMiddleware = require('../middlewares/auth');
+
 // -> /api/1.0/market/product-list
 // 所有商品的API
 router.get('/product-list', async (req, res, next) => {
@@ -12,7 +14,7 @@ router.get('/product-list', async (req, res, next) => {
 
 // -> /api/1.0/market/cart-list
 // 購物商品post
-router.post('/cart-list', async (req, res, next) => {
+router.post('/cart-list', authMiddleware.checkLogin, async (req, res, next) => {
   console.log(req.body);
   // const req.body.product_id =1
 
