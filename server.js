@@ -15,7 +15,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-// app.use(cors());
+// app.use(cors())
 
 // 啟用session
 const expressSession = require('express-session');
@@ -61,8 +61,8 @@ let orderRouter = require('./routers/order');
 app.use('/api/1.0/order', orderRouter);
 
 // marketRouter
-let marketRouter = require('./routers/market')
-app.use('/api/1.0/market', marketRouter)
+let marketRouter = require('./routers/market');
+app.use('/api/1.0/market', marketRouter);
 
 // 404
 app.use((req, res, next) => {
