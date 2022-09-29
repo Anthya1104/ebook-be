@@ -1,4 +1,5 @@
 const express = require('express');
+const { format } = require('mysql2');
 const router = express.Router();
 const pool = require('../utils/db');
 
@@ -15,9 +16,41 @@ router.post('/cart-list', async (req, res, next) => {
   console.log(req.body);
   // const req.body.product_id =1
 
-  // let getProducts =
-  await pool.execute(`INSERT INTO user_order_detail ( order_id, product_id, coupon_id, user_id, amount, valid) VALUES ('30', '30', '1', '30', '1', '1')`);
-  res.send({ message: '已成功加入購物車' });
+  //  抓到目前最後一筆訂單
+  const lastOrder = await pool.execute('SELECT * from user_order_detail ORDER BY order_id DESC LIMIT 1 ');
+
+  let lastOrderId = lastOrder[0][0].order_id;
+  let newOrderId = lastOrderId + 1;
+  // insert user_order
+  // 抓到 total amount
+  let totalAmount;
+  for (let i = 0; i < req.body.items.length; i++) {
+    totalAmount = req.body.items[i].id * req.body.items[i].price;
+  }
+  console.log(totalAmount);
+  let currentTime = new Date();
+
+  let userOrderRes = await pool.execute('INSERT INTO user_order (user_id, date, total) VALUES (?, ?, ?)', [req.body.memberId, currentTime, totalAmount]);
+
+  // insert user_order_detail
+  console.log('order-number', req.body.items[0].id * req.body.items[0].price);
+  for (let i = 0; i < req.body.items.length; i++) {
+    const result = await pool.execute(`INSERT INTO user_order_detail ( order_id, product_id, coupon_id, user_id, amount, valid) VALUES ( ?, ?, ?, ?, ?, ?)`, [
+      newOrderId,
+      req.body.items[i].id,
+      1,
+      req.body.memberId,
+      1,
+      1,
+    ]);
+  }
+
+  // insert owned_books
+  for (let i = 0; i < req.body.items.length; i++) {
+    let ownedBooksRes = await pool.execute('INSERT INTO owned_books (product_id, member_id, update_time) VALUES (?,?,?)', [req.body.items[i].id, req.body.memberId, currentTime]);
+  }
+
+  res.send('訂單成立');
 });
 
 module.exports = router;
