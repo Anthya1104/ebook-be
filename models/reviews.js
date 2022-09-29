@@ -3,7 +3,7 @@ const pool = require('../utils/db');
 // getReview
 const getReview = async (userId, perPage, offset) => {
   let [data] = await pool.execute(
-    'SELECT comment.* , product.book_name FROM comment JOIN product ON comment.product_id = product.id WHERE comment.user_id = ? AND comment.comment_valid = 1 ORDER BY comment.create_time DESC LIMIT ? OFFSET ?',
+    'SELECT comment.* , product.book_name, product.book_img FROM comment JOIN product ON comment.product_id = product.id WHERE comment.user_id = ? AND comment.comment_valid = 1 ORDER BY comment.create_time DESC LIMIT ? OFFSET ?',
     [userId, perPage, offset]
   );
   console.log(userId, perPage, offset);

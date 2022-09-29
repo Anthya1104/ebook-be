@@ -15,11 +15,6 @@ router.get('/recent-book', authMiddleware.checkLogin, bookshelfController.getRec
 // 抓取前端送來的變數
 // category filter
 router.post('/on-filter', authMiddleware.checkLogin, bookshelfController.getOnCategory);
-// TODO: isRead filter
-
-// TODO: searched filter
-
-// TODO: sorted
 
 // 抓出更新後的頁面資料
 router.get('/owned-books', bookshelfController.getOwnedBooks);
