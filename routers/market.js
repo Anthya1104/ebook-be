@@ -1,3 +1,4 @@
+const { response } = require('express');
 const express = require('express');
 const router = express.Router();
 const pool = require('../utils/db');
@@ -7,6 +8,18 @@ const pool = require('../utils/db');
 router.get('/product-list', async (req, res, next) => {
   let getProducts = await pool.execute('SELECT * from product');
   res.json(getProducts[0]);
+});
+
+// -> /api/1.0/market/get-product
+router.get('/get-product', async (req, res, next) => {
+  console.log(req.query);
+  try {
+    let [result] = await pool.execute('SELECT * from product WHERE id = ?', [req.query.id]);
+    // console.log(result);
+    res.json(result);
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 // -> /api/1.0/market/cart-list
