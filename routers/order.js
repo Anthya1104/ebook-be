@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../utils/db');
 
+const authMiddleware = require('../middlewares/auth');
+
 // -> /api/1.0/order/get-order
-router.get('/get-order', async (req, res, next) => {
+router.get('/get-order', authMiddleware.checkLogin, async (req, res, next) => {
   // console.log(req.query.member_id);
   if (req.query.order) {
     let [detailData] = await pool.execute(
@@ -26,6 +28,5 @@ router.get('/get-order', async (req, res, next) => {
   // console.log('data in order', data);
   res.json(data);
 });
-
 
 module.exports = router;

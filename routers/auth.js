@@ -46,6 +46,18 @@ router.post('/register', regiRules, async (req, res, next) => {
     let hashedPassword = await bcrypt.hash(req.body.password, 10);
     let result = await pool.execute('INSERT INTO member (account, password, name) VALUES (?,?,?)', [req.body.account, hashedPassword, req.body.name]);
     // console.log('insert new member', result);
+
+    // create default customized_book_category
+    let [memberIdRes] = await pool.execute('SELECT * from member WHERE account = ?', [req.body.account]);
+    // console.log(memberIdRes[0].id);
+    let currentTime = new Date();
+    let [newMemberCatRes] = await pool.execute('INSERT INTO customized_book_category (local_id, user_id, category_name, create_time) VALUES (?, ?, ?, ?)', [
+      1,
+      memberIdRes[0].id,
+      '所有藏書',
+      currentTime,
+    ]);
+
     res.json({ message: '註冊成功' });
   } catch (e) {
     console.error(e);

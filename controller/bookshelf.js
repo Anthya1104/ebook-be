@@ -24,8 +24,8 @@ const getOnCategory = async (req, res, next) => {
   let sql =
     'SELECT owned_books.*, customized_book_category.*, product.* FROM owned_books JOIN customized_book_category ON owned_books.category_id = customized_book_category.id JOIN product ON owned_books.product_id = product.id WHERE owned_books.member_id = ?';
   let sqlCon = '';
-  // 假設分類 0 -> all : 抓全部
-  if (req.body.bookFilterParams.category === 0) {
+  // 假設分類 1 -> all : 抓全部
+  if (req.body.bookFilterParams.category === 1) {
     let paramCondition = [req.session.member.id];
     if (req.body.bookFilterParams.is_read) {
       sqlCon = sqlCon + ' AND owned_books.reading_progress <> ?';
@@ -45,17 +45,19 @@ const getOnCategory = async (req, res, next) => {
     let totalSql = 'SELECT COUNT(*) AS total FROM owned_books WHERE member_id = ?';
     totalSql = totalSql + sqlCon;
     let [total] = await pool.execute(totalSql, paramCondition);
-    // console.log(total[0].total);
+    console.log('totalSql', totalSql);
+    // console.log('totalItem', total[0].total);
     let totalItem = total[0].total;
     let lastPage = Math.ceil(totalItem / perPage);
     const offset = perPage * (page - 1);
-    console.log(totalItem, lastPage, offset);
+    console.log('totalItem, lastPage, offset', totalItem, lastPage, offset);
     sqlCon = sqlCon + ' LIMIT ? OFFSET ?';
     paramCondition.push(perPage, offset);
     sql = sql + sqlCon;
     console.log('sql', sql);
     console.log('paramCon', paramCondition);
     let [data] = await pool.execute(sql, paramCondition);
+    // console.log(data);
 
     let newData = { pagination: { totalItem, perPage, page, lastPage }, data };
     // console.log('dataCompare', newData);
