@@ -38,9 +38,10 @@ router.post('/cart-list', authMiddleware.checkLogin, async (req, res, next) => {
   let newOrderId = lastOrderId + 1;
   // insert user_order
   // 抓到 total amount
-  let totalAmount;
+  let totalAmount = 0;
   for (let i = 0; i < req.body.items.length; i++) {
-    totalAmount = req.body.items[i].id * req.body.items[i].price;
+    let itemPrice = parseInt(req.body.items[i].price);
+    totalAmount += itemPrice;
   }
   console.log(totalAmount);
   let currentTime = new Date();
