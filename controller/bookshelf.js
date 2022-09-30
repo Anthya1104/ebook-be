@@ -45,18 +45,19 @@ const getOnCategory = async (req, res, next) => {
     let totalSql = 'SELECT COUNT(*) AS total FROM owned_books WHERE member_id = ?';
     totalSql = totalSql + sqlCon;
     let [total] = await pool.execute(totalSql, paramCondition);
-    // console.log(total[0].total);
+    console.log('totalSql', totalSql);
+    // console.log('totalItem', total[0].total);
     let totalItem = total[0].total;
     let lastPage = Math.ceil(totalItem / perPage);
     const offset = perPage * (page - 1);
-    console.log(totalItem, lastPage, offset);
+    console.log('totalItem, lastPage, offset', totalItem, lastPage, offset);
     sqlCon = sqlCon + ' LIMIT ? OFFSET ?';
     paramCondition.push(perPage, offset);
     sql = sql + sqlCon;
     console.log('sql', sql);
     console.log('paramCon', paramCondition);
     let [data] = await pool.execute(sql, paramCondition);
-    console.log(data)
+    // console.log(data);
 
     let newData = { pagination: { totalItem, perPage, page, lastPage }, data };
     // console.log('dataCompare', newData);
