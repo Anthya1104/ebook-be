@@ -35,9 +35,9 @@ const getOnCategory = async (req, res, next) => {
       paramCondition.push(0);
     }
     if (!req.body.bookFilterParams.date_sort_toggled) {
-      sqlCon = sqlCon + ' ORDER BY owned_books.update_time DESC';
+      sqlCon = sqlCon + ' ORDER BY owned_books.created_time DESC';
     } else {
-      sqlCon = sqlCon + ' ORDER BY owned_books.update_time';
+      sqlCon = sqlCon + ' ORDER BY owned_books.created_time';
     }
     // 最後分頁
     const perPage = 4;
@@ -77,9 +77,9 @@ const getOnCategory = async (req, res, next) => {
     paramCondition.push(0);
   }
   if (!req.body.bookFilterParams.date_sort_toggled) {
-    sqlCon = sqlCon + ' ORDER BY owned_books.update_time DESC';
+    sqlCon = sqlCon + ' ORDER BY owned_books.created_time DESC';
   } else {
-    sqlCon = sqlCon + ' ORDER BY owned_books.update_time';
+    sqlCon = sqlCon + ' ORDER BY owned_books.created_time';
   }
 
   const perPage = 4;

@@ -63,7 +63,7 @@ router.post('/cart-list', authMiddleware.checkLogin, async (req, res, next) => {
 
   // insert owned_books
   for (let i = 0; i < req.body.items.length; i++) {
-    let ownedBooksRes = await pool.execute('INSERT INTO owned_books (product_id, member_id, update_time) VALUES (?,?,?)', [req.body.items[i].id, req.body.memberId, currentTime]);
+    let ownedBooksRes = await pool.execute('INSERT INTO owned_books (product_id, member_id, created_time) VALUES (?,?,?)', [req.body.items[i].id, req.body.memberId, currentTime]);
   }
 
   res.send('訂單成立');
