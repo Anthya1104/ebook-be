@@ -8,7 +8,7 @@ async function getCustomCategories(userId) {
 // 抓取recent book 資料
 const getRecentBook = async (bookId) => {
   let [data] = await pool.execute(
-    'SELECT owned_books.*, product.* FROM owned_books JOIN product ON owned_books.product_id = product.id WHERE member_id = ? ORDER BY update_time DESC LIMIT 1',
+    'SELECT owned_books.*, product.* FROM owned_books JOIN product ON owned_books.product_id = product.id WHERE member_id = ? AND update_time IS NOT NULL ORDER BY update_time DESC LIMIT 1',
     [bookId]
   );
   return data;
