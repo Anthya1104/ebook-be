@@ -24,7 +24,7 @@ const getOwnedBooks = async () => {
 // 更新最後閱讀
 const updateRecentBook = async (memberId, bookId, currentTime) => {
   try {
-    let [data] = await pool.execute('UPDATE owned_books SET update_time = ? WHERE member_id = ? AND product_id = ?', [currentTime, memberId, bookId]);
+    let [data] = await pool.execute('UPDATE owned_books SET update_time = ?, reading_progress = ? WHERE member_id = ? AND product_id = ?', [currentTime, 10, memberId, bookId]);
     return data;
   } catch (e) {
     console.error(e);
