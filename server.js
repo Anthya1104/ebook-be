@@ -68,6 +68,10 @@ app.use('/api/1.0/market', marketRouter);
 let couponRouter = require('./routers/coupon');
 app.use('/api/1.0/coupon', couponRouter);
 
+
+const LineAPI = require('./routers/linePay');
+app.use('/api/1.0/line', LineAPI);
+
 // 404
 app.use((req, res, next) => {
   res.status(404).send('404 Not Found');
