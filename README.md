@@ -31,7 +31,7 @@ $ npm run dev
  ```
 
 p.s. You'll need to clone and run the frontend repo meanwhile the project running<br>
-(You can find the backend repo <a href='https://github.com/Anthya1104/ebook-fe'>here<a> !) 
+(You can find the frontend repo <a href='https://github.com/Anthya1104/ebook-fe'>here<a> !) 
 
 ## Credits
 
