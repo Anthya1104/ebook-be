@@ -1,6 +1,10 @@
 const bookshelfModel = require('../models/bookshelf');
 const pool = require('../utils/db');
 
+
+// TODO: async/await 錯誤處理
+// ref: https://hackmd.io/@meteorite/SJGYhqbBw
+
 // 傳送全部分類資料給前端
 async function getCustomCategories(req, res, next) {
   // console.log('bookshelf', req.session.member.id);
